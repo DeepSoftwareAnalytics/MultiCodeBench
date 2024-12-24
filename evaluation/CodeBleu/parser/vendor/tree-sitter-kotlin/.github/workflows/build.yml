@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: npm install
+      - name: Generate parser
+        run: npm run generate
+      - name: Verify that generated parser matches the repository
+        run: |
+          diff=`git diff HEAD -- src`
+          echo "$diff"
+          test -z "$diff"
+      - name: Output parser size
+        run: du -sh src/* | sort -h
+      - name: Run tests
+        run: npm test
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build and test crate
+        run: cargo test

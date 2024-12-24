@@ -1,0 +1,59 @@
+==========================
+Line comments
+==========================
+
+// this is a comment
+var foo =
+  // another comment
+  bar
+
+---
+
+(program
+  (comment)
+  (variable_declaration
+    (identifier)
+    (comment)
+    (identifier)))
+
+==========================
+Documentation comments
+==========================
+
+/**
+  this is a documentation comment
+  with two lines.
+*/
+var foo =
+  // another comment
+  bar
+
+/// A single-line documentation comment
+let apple = pie
+
+/// A documentation comment
+/// with three
+/// lines
+func apply() { }
+
+---
+
+(program
+    (comment)
+    (variable_declaration
+      name: (identifier)
+      (comment)
+      value: (identifier))
+
+    (comment)
+    (constant_declaration
+      name: (identifier)
+      value: (identifier))
+
+    (comment)
+    (comment)
+    (comment)
+    (function_declaration
+      name: (identifier)
+      (parameter_list))
+)

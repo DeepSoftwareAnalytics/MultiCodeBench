@@ -1,0 +1,11 @@
+python calc_code_bleu.py --model codellama7b     --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model codellama13b    --predict_result_base_path generation_result/docstring_only  
+python calc_code_bleu.py --model codellama34b    --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model deepseek6.7b    --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model deepseek33b     --predict_result_base_path generation_result/docstring_only  
+python calc_code_bleu.py --model starcoder       --predict_result_base_path generation_result/docstring_only  
+python calc_code_bleu.py --model starcoder2_3b   --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model starcoder2_7b   --predict_result_base_path generation_result/docstring_only  
+python calc_code_bleu.py --model starcoder2_15b  --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model GPT4  --predict_result_base_path generation_result/docstring_only   
+python calc_code_bleu.py --model GPT3.5  --predict_result_base_path generation_result/docstring_only  

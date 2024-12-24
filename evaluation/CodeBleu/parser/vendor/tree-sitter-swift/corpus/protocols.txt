@@ -1,0 +1,68 @@
+======
+Empty protocol declaration
+======
+
+protocol A {}
+
+---
+
+(program
+	(protocol_declaration (identifier)))
+
+======
+Public protocol declaration
+======
+
+public protocol A {
+	var a: Int { get }
+	func f()
+	init()
+	init?()
+	init!()
+	subscript(_: ()) -> Int { get }
+}
+
+---
+
+(program
+	(protocol_declaration (modifier) (identifier)
+		(protocol_variable_declaration (identifier) (type (standard_type)))
+		(protocol_method_declaration (identifier) (parameter_list))
+		(protocol_initializer_declaration)
+		(protocol_initializer_declaration)
+		(protocol_initializer_declaration)
+		(protocol_subscript_declaration (type (tuple)) (type (standard_type)))))
+
+
+======
+Protocols with a typealias
+======
+
+protocol Sequence {
+  typealias A
+	typealias B = C
+}
+
+---
+
+(program
+	(protocol_declaration (identifier)
+    (protocol_typealias_declaration (identifier))
+		(protocol_typealias_declaration (identifier) (type (identifier)))))
+
+
+======
+Protocols with an associatedtype
+======
+
+protocol Sequence {
+  associatedtype Foo
+  associatedtype Bar: BizProtocol
+}
+
+---
+
+(program
+	(protocol_declaration (identifier)
+    (associatedtype_declaration (identifier))
+    (associatedtype_declaration (identifier) (type (identifier)))))

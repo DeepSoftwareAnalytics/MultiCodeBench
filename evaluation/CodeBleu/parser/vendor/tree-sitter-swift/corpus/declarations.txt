@@ -1,0 +1,374 @@
+======
+import
+======
+
+import Foo
+import Foo.Bar
+import typealias Foo.Bar.Quux
+import foo.bar
+
+---
+
+(program
+	(import_declaration (identifier))
+	(import_declaration (identifier) (identifier))
+	(import_declaration (identifier) (identifier) (identifier))
+	(import_declaration (identifier) (identifier)))
+
+======
+constant
+======
+
+private let foo
+public let foo = bar
+let foo, bar = foo
+let foo, bar = foo, quux: Int = baz
+public static let foo = bar
+
+---
+
+(program
+  (constant_declaration (modifier)
+    name: (identifier))
+  (constant_declaration (modifier)
+    name: (identifier)
+    value: (identifier))
+  (constant_declaration
+    name: (identifier)
+    name: (identifier)
+    value: (identifier))
+  (constant_declaration
+    name: (identifier)
+    name: (identifier)
+    value: (identifier)
+    name: (identifier)
+    type: (type (standard_type))
+    value: (identifier))
+  (constant_declaration (modifier) (modifier)
+    name: (identifier)
+    value: (identifier)))
+
+======
+variable
+======
+
+internal var foo
+var foo = bar
+var foo: Int { get }
+var foo: Int { get set }
+var foo: Int { set get }
+var foo, bar = foo
+public var foo, bar = foo, quux: Int = baz
+public private(set) var foo = bar
+public static var foo = bar
+
+---
+
+(program
+  (variable_declaration (modifier)
+    name: (identifier))
+  (variable_declaration
+    name: (identifier)
+    value: (identifier))
+  (variable_declaration
+    name: (identifier)
+    type: (type (standard_type)))
+  (variable_declaration
+    name: (identifier)
+    type: (type (standard_type)))
+  (variable_declaration
+    name: (identifier)
+    type: (type (standard_type)))
+  (variable_declaration
+    name: (identifier)
+    name: (identifier)
+    value: (identifier))
+  (variable_declaration (modifier)
+    name: (identifier)
+    name: (identifier)
+    value: (identifier)
+    name: (identifier)
+    type: (type (standard_type))
+    value: (identifier))
+  (variable_declaration (modifier) (modifier)
+    name: (identifier)
+    value: (identifier))
+  (variable_declaration (modifier) (modifier)
+    name: (identifier)
+    value: (identifier)))
+
+======
+typealias
+======
+
+typealias Foo = Int
+public typealias Bar = String
+
+---
+
+(program
+	(typealias_declaration (identifier) (type (standard_type)))
+  (typealias_declaration (modifier) (identifier) (type (standard_type))))
+
+======
+functions
+======
+
+public func foo() {}
+func > (lhs: Int, rhs: Int) -> Bool {}
+func foo() -> Int {}
+func foo(_: Int) {}
+func foo(x: Int) {}
+func foo(_ x: Int) {}
+func foo(x x: Int) {}
+func foo(x: Int, y: Int) {}
+
+---
+
+(program
+  (function_declaration (modifier)
+    name: (identifier)
+    (parameter_list))
+  (function_declaration
+    name: (operator)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type)))
+      (parameter_declaration (identifier) (type (standard_type))))
+    return: (type (standard_type)))
+  (function_declaration
+    name: (identifier)
+    (parameter_list)
+    return: (type (standard_type)))
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (identifier) (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type)))
+      (parameter_declaration (identifier) (type (standard_type)))))
+)
+
+======
+functions - throwing
+======
+
+public func foo() throws -> Int {}
+
+---
+
+(program
+  (function_declaration (modifier)
+    name: (identifier)
+    (parameter_list)
+    return: (type (standard_type)))
+)
+
+======
+functions - optionals
+======
+
+public func foo() -> Int? {}
+public func foo(p1: String?, p2: Int) -> Void {}
+public func foo(p1: String!) -> Int! {}
+
+---
+
+(program
+  (function_declaration (modifier)
+    name: (identifier)
+    (parameter_list)
+    return: (type (standard_type)))
+  (function_declaration (modifier)
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type)))
+      (parameter_declaration (identifier) (type (standard_type))))
+    return: (type (standard_type)))
+  (function_declaration (modifier)
+    name: (identifier)
+    (parameter_list
+      (parameter_declaration (identifier) (type (standard_type))))
+    return: (type (standard_type)))
+)
+
+======
+functions - generic functions
+======
+
+public func foo<T>() -> T? {}
+public func foo<T: Comparable>() -> T? {}
+public func foo<Foo, Bar>(p1: Foo) -> Bar {}
+
+---
+
+(program
+  (function_declaration (modifier)
+    name: (identifier)
+    (generic_clause
+      name: (identifier))
+    (parameter_list)
+    return: (type (identifier)))
+  (function_declaration (modifier)
+    name: (identifier)
+    (generic_clause
+      name: (identifier)
+      type: (type_identifier))
+    (parameter_list)
+    return: (type (identifier)))
+  (function_declaration (modifier)
+    name: (identifier)
+    (generic_clause
+      name: (identifier)
+      name: (identifier))
+    (parameter_list
+      (parameter_declaration (identifier) (type (identifier))))
+    return: (type (identifier))))
+
+
+======
+functions - static
+======
+
+public static func foo() {}
+
+---
+
+(program
+  (function_declaration (modifier) (modifier)
+    name: (identifier)
+    (parameter_list))
+)
+
+======
+enum
+======
+
+public enum A {}
+internal enum A {
+	case A
+}
+private enum A {
+	case A(Int)
+}
+enum A {
+	case A = ""
+}
+
+---
+
+(program
+	(enum_declaration (modifier) (identifier))
+	(enum_declaration (modifier) (identifier) (case_declaration (identifier)))
+	(enum_declaration (modifier) (identifier) (case_declaration (identifier) (tuple_type (standard_type))))
+	(enum_declaration (identifier) (case_declaration (identifier) (static_string_literal))))
+
+======
+initializer
+======
+
+struct S {
+	init() {}
+}
+
+---
+
+(program
+	(struct_declaration (identifier)
+		(initializer_declaration)))
+
+======
+extension
+======
+
+private extension A {
+	func f() {}
+}
+
+---
+
+(program
+	(extension_declaration (modifier) (identifier)
+		(function_declaration
+      name: (identifier)
+      (parameter_list))))
+
+======
+subscript
+======
+
+struct A {
+	subscript(_: B) -> C {}
+}
+
+---
+
+(program
+	(struct_declaration (identifier)
+		(subscript_declaration (type (identifier)) (type (identifier)))))
+
+======
+operator
+======
+
+prefix operator < {}
+postfix operator > {}
+infix operator <> {}
+infix operator <> {
+	precedence 0
+}
+infix operator <> {
+	precedence 10
+}
+infix operator <> {
+	precedence 99
+}
+infix operator <> {
+	precedence 199
+}
+infix operator <> {
+	precedence 249
+}
+infix operator <> {
+	precedence 255
+}
+infix operator <> {
+	associativity left
+}
+infix operator <> {
+	precedence 0
+	associativity right
+}
+infix operator <> {
+	associativity none
+	precedence 9
+}
+
+---
+
+(program
+	(operator_declaration (operator))
+	(operator_declaration (operator))
+	(operator_declaration (operator))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (precedence_clause))
+	(operator_declaration (operator) (associativity_clause))
+	(operator_declaration (operator) (precedence_clause) (associativity_clause))
+	(operator_declaration (operator) (associativity_clause) (precedence_clause)))

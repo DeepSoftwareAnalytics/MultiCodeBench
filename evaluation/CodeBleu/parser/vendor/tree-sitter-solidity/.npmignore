@@ -1,0 +1,24 @@
+# Tree-sitter
+corpus
+examples
+script
+test
+
+# Other compilation artefacts
+build
+
+# Rust 
+target
+Cargo.lock
+Cargo.toml
+
+# python 
+typed-libraries
+binding.gyp
+
+# Js
+node_modules
+
+# Other
+.github
+.vscode

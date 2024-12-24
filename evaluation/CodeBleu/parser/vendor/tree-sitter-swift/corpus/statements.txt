@@ -1,0 +1,341 @@
+======
+for statement
+======
+
+for x in y {}
+for x: Int in y {}
+
+---
+
+(program
+	(for_statement (identifier) (identifier))
+	(for_statement (identifier) (type (standard_type)) (identifier)))
+
+======
+while statement
+======
+
+while #available(iOS 13.0, *) {}
+while let x = y, z = y {}
+
+---
+
+(program
+	(while_statement (availability_condition))
+	(while_statement (optional_binding_condition (optional_binding (identifier) (identifier)) (optional_binding (identifier) (identifier)))))
+
+======
+repeat while statement
+======
+
+repeat {} while a
+
+---
+
+(program (repeat_while_statement (identifier)))
+
+======
+if statement
+======
+
+if x {}
+if x {} else {}
+if x {} else if y {}
+
+---
+
+(program
+	(if_statement (identifier))
+	(if_statement (identifier))
+	(if_statement (identifier) (if_statement (identifier))))
+
+======
+guard Statements
+======
+
+guard x else {}
+
+---
+
+(program (guard_statement (identifier)))
+
+======
+switch statement
+======
+
+switch x {
+case _:
+case let x:
+case var y:
+case ():
+case .A:
+case .A(_, _):
+case is Int:
+case _ as Int:
+default:
+}
+
+---
+
+(program
+	(switch_statement (identifier)
+		(case_statement (wildcard_pattern))
+		(case_statement (value_binding_pattern (identifier)))
+		(case_statement (value_binding_pattern (identifier)))
+		(case_statement (tuple))
+		(case_statement (enum_case_pattern (identifier)))
+		(case_statement (enum_case_pattern (identifier) (tuple (identifier) (identifier))))
+		(case_statement (is_pattern (type (standard_type))))
+		(case_statement (as_pattern (wildcard_pattern) (type (standard_type))))
+		(case_statement)))
+
+======
+labeled statement
+======
+
+label: for x in y {}
+label: if x {}
+
+---
+
+(program
+	(labeled_statement (identifier) (for_statement (identifier) (identifier)))
+	(labeled_statement (identifier) (if_statement (identifier))))
+
+======
+break statement
+======
+
+break
+break label
+
+---
+
+(program
+	(break_statement)
+	(break_statement (identifier)))
+
+======
+continue statement
+======
+
+continue
+continue label
+
+---
+
+(program
+	(continue_statement)
+	(continue_statement (identifier)))
+
+======
+fallthrough statement
+======
+
+fallthrough
+
+---
+
+(program (fallthrough_statement))
+
+======
+return statement
+======
+
+return
+return x
+
+---
+
+(program
+	(return_statement)
+	(return_statement (identifier)))
+
+======
+throw statement
+======
+
+throw x
+
+---
+
+(program (throw_statement (identifier)))
+
+======
+defer statement
+======
+
+defer {}
+
+---
+
+(program (defer_statement))
+
+======
+do statement
+======
+
+do {}
+do {} catch {}
+do {} catch let e {}
+
+---
+
+(program
+	(do_statement)
+	(do_statement (catch_clause))
+	(do_statement (catch_clause (value_binding_pattern (identifier)))))
+
+
+======
+conditional compilation - `os` variants
+======
+
+#if os(iOS) || os(macOS)
+#endif
+#if os(tvOS)
+#endif
+#if os(iOS) && os(Linux)
+#endif
+
+---
+
+(program
+	(build_configuration_statement)
+  (build_configuration_statement)
+  (build_configuration_statement))
+
+======
+conditional compilation - `arch` variants
+======
+
+#if arch(x86_64)
+#endif
+#if arch(arm) || arch(arm64)
+#endif
+#if arch(i386) && arch(x86_64)
+#endif
+
+---
+
+(program
+	(build_configuration_statement)
+  (build_configuration_statement)
+  (build_configuration_statement))
+
+======
+conditional compilation - `canImport`
+======
+
+#if canImport(UIKit)
+#elseif canImport(Foundation)
+#endif
+
+---
+
+(program
+	(build_configuration_statement (identifier) (identifier)))
+
+======
+conditional compilation - `targetEnvironment`
+======
+
+#if targetEnvironment(simulator) || targetEnvironment(macCatalyst)
+#endif
+#if targetEnvironment(macCatalyst)
+#endif
+
+---
+
+(program
+	(build_configuration_statement)
+  (build_configuration_statement))
+
+======
+conditional compilation - `compiler` version
+======
+
+#if compiler(>=5)
+#endif
+#if compiler(<4)
+#endif
+
+---
+
+(program
+	(build_configuration_statement (semantic_version))
+  (build_configuration_statement (semantic_version)))
+
+======
+conditional compilation - `swift` version
+======
+
+
+#if swift(>=5)
+#endif
+#if compiler(<4.2)
+#endif
+
+---
+
+(program
+	(build_configuration_statement (semantic_version))
+  (build_configuration_statement (semantic_version)))
+
+======
+conditional compilation - Booleans and Identifiers
+======
+
+#if x
+#endif
+#if true
+#endif
+#if (true)
+#endif
+#if !true
+#endif
+#if true && true
+#endif
+#if true || true
+#endif
+#if true
+#elseif false
+#elseif x
+#else
+#endif
+#if TREE_SITTER_DEBUG
+#endif
+
+---
+
+(program
+	(build_configuration_statement (identifier))
+	(build_configuration_statement (boolean_literal))
+	(build_configuration_statement (boolean_literal))
+	(build_configuration_statement (boolean_literal))
+	(build_configuration_statement (boolean_literal) (boolean_literal))
+	(build_configuration_statement (boolean_literal) (boolean_literal))
+	(build_configuration_statement (boolean_literal) (boolean_literal) (identifier))
+  (build_configuration_statement (identifier)))
+
+======
+multiple statements on a line
+======
+
+x;y;z
+
+---
+
+(program (identifier) (identifier) (identifier))
+
+======
+multiple statements on multiple lines
+======
+
+x
+y
+z
+
+---
+
+(program (identifier) (identifier) (identifier))

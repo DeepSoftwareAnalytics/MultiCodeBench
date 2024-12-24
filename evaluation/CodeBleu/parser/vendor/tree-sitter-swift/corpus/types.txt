@@ -1,0 +1,161 @@
+======
+Array type
+======
+
+let foo: [String]
+var bar: Array<Int>
+let biz: [FooType]
+
+---
+
+(program
+  (constant_declaration
+    name: (identifier)
+    type: (array_type (standard_type)))
+  (variable_declaration
+    name: (identifier)
+    type: (array_type (standard_type)))
+  (constant_declaration
+    name: (identifier)
+    type: (array_type (type_identifier))))
+
+======
+Array type with initialization
+======
+
+let ints: [Int] = [
+  0, 1, 2, 3, 4, 5
+]
+var mixed = [
+  0, Foo, 2, "Three", 4, "Five"
+]
+var foo: [AnyHashable] = [ ]
+
+---
+
+(program
+  (constant_declaration
+    name: (identifier)
+    type: (array_type (standard_type))
+    value: (array (number) (number) (number) (number) (number) (number)))
+  (variable_declaration
+    name: (identifier)
+    value: (array (number) (identifier) (number) (string) (number) (string)))
+  (variable_declaration
+    name: (identifier)
+    type: (array_type (type_identifier))
+    value: (array)))
+
+======
+Dictionary type
+======
+
+let foo: Dictionary<String, String>
+var foo: [Int: AnyHashable]
+let foo: [AnyHashable: Any]
+
+---
+
+(program
+  (constant_declaration
+    name: (identifier)
+    type: (dictionary_type (standard_type) (standard_type)))
+  (variable_declaration
+    name: (identifier)
+    type: (dictionary_type (standard_type) (type_identifier)))
+  (constant_declaration
+    name: (identifier)
+    type: (dictionary_type (type_identifier) (type_identifier))))
+
+======
+Dictionary type with initialization
+======
+
+var strings: Dictionary<String, String> = [ "Foo" : "Bar" ]
+let numbers = [
+    0: "Zero",
+    1: "One",
+    2: "Two"
+]
+var foo: [AnyHashable: Any] = [ : ]
+
+---
+
+(program
+  (variable_declaration
+    name: (identifier)
+    type: (dictionary_type (standard_type) (standard_type))
+    value: (dictionary (string) (string)))
+  (constant_declaration
+    name: (identifier)
+    value: (dictionary (number) (string) (number) (string) (number) (string)))
+  (variable_declaration
+    name: (identifier)
+    type: (dictionary_type (type_identifier) (type_identifier))
+    value: (dictionary)))
+
+======
+Tuple declaration
+======
+
+var foo: (Int, Int)
+let foo: (top: Int, bottom: Int)
+func foo() -> (min: Int, max: Int)? {}
+func foo() -> (String, String) {}
+
+---
+
+(program
+  (variable_declaration
+    name: (identifier)
+    type: (type (tuple (standard_type) (standard_type))))
+  (constant_declaration
+    name: (identifier)
+    type: (type (tuple (identifier) (type (standard_type)) (identifier) (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list)
+    return: (type (tuple (identifier) (type (standard_type)) (identifier) (type (standard_type)))))
+  (function_declaration
+    name: (identifier)
+    (parameter_list)
+    return: (type (tuple (standard_type) (standard_type)))))
+
+======
+Empty tuple declaration
+======
+
+let foo: ()
+func foo() -> ((), Int) {}
+
+---
+
+(program
+  (constant_declaration
+    name: (identifier)
+    type: (type (tuple)))
+    (function_declaration
+      name: (identifier)
+      (parameter_list)
+      return: (type (tuple (tuple_type) (standard_type)))))
+
+======
+Tuple usage
+======
+
+var foo = (10, 12)
+let foo = (top: 10, bottom: 12)
+return ("Foo", "Bar")
+return (first: "Foo", last: "Bar")
+
+---
+
+(program
+  (variable_declaration
+    name: (identifier)
+    value: (tuple (number) (number)))
+  (constant_declaration
+    name: (identifier)
+    value: (tuple (identifier) (number) (identifier) (number)))
+  (return_statement (tuple (string) (string)))
+  (return_statement (tuple (identifier) (string) (identifier) (string))))
